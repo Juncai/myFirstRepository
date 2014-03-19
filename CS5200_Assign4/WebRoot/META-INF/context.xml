@@ -6,7 +6,7 @@
             maxIdle="30"
             maxWait="10000"
             username="root"
-            password="" 
+            password="root" 
             driverClassName="com.mysql.jdbc.Driver"
-            url="jdbc:mysql://localhost:3306/movies"/>
+            url="jdbc:mysql://localhost/movies"/>
 </Context>
