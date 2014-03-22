@@ -86,7 +86,7 @@ public class UserManager {
 	}
 
 	public void updateUser(String username, User user) {
-		String updateSql = "UPDATE user SET password=? firstName=? lastName=? dateOfBirth=? WHERE username=?";
+		String updateSql = "UPDATE user SET password=?,firstName=?,lastName=?,dateOfBirth=? WHERE username=?";
 		try {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(updateSql);
@@ -95,6 +95,7 @@ public class UserManager {
 			ps.setString(3, user.getLastName());
 			ps.setDate(4, new java.sql.Date(user.getDateOfBirth().getTime())); 
 			ps.setString(5, username);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -106,6 +107,7 @@ public class UserManager {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(deleteSql);
 			ps.setString(1, username);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

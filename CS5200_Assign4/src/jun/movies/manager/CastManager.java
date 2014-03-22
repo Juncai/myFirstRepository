@@ -39,8 +39,8 @@ public class CastManager {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(createCastSql);
 			ps.setString(1, cast.getCastId());
-			ps.setString(3, cast.getMovie().getId());
-			ps.setString(2, cast.getActor().getId());
+			ps.setString(2, cast.getMovie().getId());
+			ps.setString(3, cast.getActor().getId());
 			ps.setString(4, cast.getCharacterName());
 			ps.execute();
 		} catch (SQLException e) {
@@ -126,10 +126,12 @@ public class CastManager {
 			ps = conn.prepareStatement(readCastForIdSql);
 			ps.setString(1, castId);
 			rs = ps.executeQuery();
-			Actor actor = actorManager.readActor(rs.getString("actorname"));
-			Movie movie = movieManager.readMovie(rs.getString("movieId"));
-			cast = new Cast(rs.getString("castId"), actor,
-					movie, rs.getString("characterName"));
+			if(rs.next()) {
+				Actor actor = actorManager.readActor(rs.getString("actorId"));
+				Movie movie = movieManager.readMovie(rs.getString("movieId"));
+				cast = new Cast(rs.getString("castId"), actor,
+						movie, rs.getString("characterName"));				
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -137,7 +139,7 @@ public class CastManager {
 	}
 	
 	void updateCast(String castId, Cast newCast) {
-		String updateSql = "UPDATE cast SET actorId=? movieId=? characterName=? WHERE castId=?";
+		String updateSql = "UPDATE cast SET actorId=?,movieId=?,characterName=? WHERE castId=?";
 		try {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(updateSql);

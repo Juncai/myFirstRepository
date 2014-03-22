@@ -130,11 +130,13 @@ public class CommentManager {
 			ps = conn.prepareStatement(readCommentForIdSql);
 			ps.setString(1, commentId);
 			rs = ps.executeQuery();
-			User user = userManager.readUser(rs.getString("username"));
-			Movie movie = movieManager.readMovie(rs.getString("movieId"));
-			comment = new Comment(rs.getString("commentId"), user,
-					movie, rs.getString("content"),
-					rs.getDate("date"));
+			if (rs.next()) {
+				User user = userManager.readUser(rs.getString("username"));
+				Movie movie = movieManager.readMovie(rs.getString("movieId"));
+				comment = new Comment(rs.getString("commentId"), user,
+						movie, rs.getString("content"),
+						rs.getDate("date"));				
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -142,7 +144,7 @@ public class CommentManager {
 	}
 	
 	void updateComment(String commentId, Comment newComment) {
-		String updateSql = "UPDATE comment SET username=? movieId=? content=? date=? WHERE commentId=?";
+		String updateSql = "UPDATE comment SET username=?,movieId=?,content=?,date=? WHERE commentId=?";
 		try {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(updateSql);

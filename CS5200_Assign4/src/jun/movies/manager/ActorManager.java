@@ -84,14 +84,15 @@ public class ActorManager {
 	}
 	
 	public void updateActor(String actorId, Actor actor) {
-		String updateSql = "UPDATE actor SET firstName=? lastName=? dateOfBirth=? WHERE id=?";
+		String updateSql = "UPDATE actor SET firstName=?,lastName=?,dateOfBirth=? WHERE id=?";
 		try {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(updateSql);
 			ps.setString(1, actor.getFirstName());
 			ps.setString(2, actor.getLastName());
 			ps.setDate(3, new java.sql.Date(actor.getDateOfBirth().getTime()));
-			ps.setString(5, actorId);
+			ps.setString(4, actorId);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -103,6 +104,7 @@ public class ActorManager {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(deleteSql);
 			ps.setString(1, actorId);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

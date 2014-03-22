@@ -85,14 +85,15 @@ public class MovieManager {
 	}
 	
 	public void updateMovie(String movieId, Movie movie) {
-		String updateSql = "UPDATE movie SET title=? posterImage=? releaseDate=? WHERE id=?";
+		String updateSql = "UPDATE movie SET title=?,posterImage=?,releaseDate=? WHERE id=?";
 		try {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(updateSql);
 			ps.setString(1, movie.getTitle());
 			ps.setString(2, movie.getPosterImage());
 			ps.setDate(3, new java.sql.Date(movie.getReleaseDate().getTime()));
-			ps.setString(5, movieId);
+			ps.setString(4, movieId);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -104,6 +105,7 @@ public class MovieManager {
 			conn = ds.getConnection();
 			ps = conn.prepareStatement(deleteSql);
 			ps.setString(1, movieId);
+			ps.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
